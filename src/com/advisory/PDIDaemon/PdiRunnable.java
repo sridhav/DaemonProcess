@@ -3,6 +3,8 @@
  * This file is part of the Crimson Care Management platform.
  */
 
+package com.advisory.PDIDaemon;
+
 import java.io.*;
 import java.lang.reflect.Field;
 
