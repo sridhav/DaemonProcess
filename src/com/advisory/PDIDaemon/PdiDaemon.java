@@ -163,6 +163,7 @@ public class PdiDaemon {
         run = new PdiRunnable(command, fileName);
         run.setLogWriter(logWriter);
         try {
+
             do {
                 pdi.logRotate(pdi.getLogFolder() + File.separator + DAEMON_LOG_NAME);
                 pdi.logRotate(pdi.getLogFolder() + File.separator + COMMAND_LOG_NAME);
@@ -457,7 +458,7 @@ public class PdiDaemon {
      * @return log writer for autospawn
      */
     protected PdiLogWriter getLogWriter() {
-        return this.getLogWriter();
+        return this.logWriter;
     }
 
     /**
