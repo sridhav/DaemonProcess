@@ -21,17 +21,31 @@ public class ProcessCreator {
      */
     private String logFile = "/tmp/logs/output.log";
 
+    /**
+     * process that has been dispatched
+     */
     private Process process = null;
 
+    /**
+     * @param command command to be executed
+     */
     public ProcessCreator(String command) {
         this.setCommand(command);
     }
 
+    /**
+     * @param command command to be executed
+     * @param logFileName log output for command to this file
+     */
     public ProcessCreator(String command, String logFileName) {
         this.setCommand(command);
         this.setLogFile(logFileName);
     }
 
+    /**
+     * executes the process
+     * @return pid fo the process
+     */
     public int execute() {
         String command = this.getCommand();
         ProcessBuilder pb = new ProcessBuilder();
