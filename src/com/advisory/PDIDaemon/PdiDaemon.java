@@ -128,6 +128,10 @@ public class PdiDaemon {
      */
     private String sizeUnit;
 
+    /**
+     * logWriter for autospawn
+     */
+    private PdiLogWriter logWriter;
 
     /**
      * Constructor for the daemon process
@@ -150,6 +154,7 @@ public class PdiDaemon {
     public static void main(String args[]) {
         PdiDaemon pdi = new PdiDaemon(args);
         PdiLogWriter logWriter = new PdiLogWriter(pdi.getLogFolder() + File.separator + DAEMON_LOG_NAME);
+        pdi.setLogWriter(logWriter);
         int spawnTime = pdi.getSpawnTime();
         int waitTime = pdi.getWaitTime();
         String command = pdi.getCommand();
@@ -442,6 +447,20 @@ public class PdiDaemon {
     }
 
     /**
+     * @param logWriter log writer for autospawn
+     */
+    protected void setLogWriter(PdiLogWriter logWriter) {
+        this.logWriter = logWriter;
+    }
+
+    /**
+     * @return log writer for autospawn
+     */
+    protected PdiLogWriter getLogWriter() {
+        return this.getLogWriter();
+    }
+
+    /**
      * Rotates the log to a new file when log reaches a max size
      */
     protected void logRotate(String fileName) {
@@ -453,7 +472,8 @@ public class PdiDaemon {
             String today = dateFormat.format(date);
             String compressedLogFileName = logFile.getPath() + today;
             File compressedLogFile = new File(compressedLogFileName);
-            System.out.printf(MESSAGE_COMPRESS, logFile.getName(), compressedLogFileName, logFile.getParent());
+            String log = String.format(MESSAGE_COMPRESS, logFile.getName(), compressedLogFileName, logFile.getParent());
+            this.getLogWriter().writeLog(log);
             logFile.renameTo(compressedLogFile);
         }
     }
