@@ -29,10 +29,6 @@ public class PdiRunnable {
      */
     private int pid = -1;
 
-    /**
-     * limit cpu value
-     */
-    private int limit = -1;
 
     /**
      * log file to store command output
