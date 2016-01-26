@@ -1,0 +1,82 @@
+21:49:23,961 INFO  [KarafInstance] 
+*******************************************************************************
+*** Karaf Instance Number: 1 at /opt/di/./system/karaf//data1               ***
+*** Karaf Port:8801                                                         ***
+*** OSGI Service Port:9050                                                  ***
+*******************************************************************************
+2016/01/25 21:49:24 - Kitchen - Start of run.
+/media/sf_di/system/karaf/deploy does not exist, please create it.
+Cannot create folder /media/sf_di/system/karaf/data1/generated-bundles. Is the folder write-protected?
+/opt/data-integration/system/karaf/deploy does not exist, please create it.
+Root path does not exist: /opt/data-integration/system/karaf/deploy
+/data/env/dev/system/karaf/deploy does not exist, please create it.
+Cannot create folder /data/env/dev/system/karaf/data1/generated-bundles. Is the folder write-protected?
+/data/env/di/system/karaf/deploy does not exist, please create it.
+Cannot create folder /data/env/di/system/karaf/data1/generated-bundles. Is the folder write-protected?
+2016/01/25 21:49:25 - cfgbuilder - Warning: The configuration parameter [org] is not supported by the default configuration builder for scheme: sftp
+21:49:28,015 ERROR [WebjarsURLConnection] Error Transforming zip
+java.io.IOException: Pipe closed
+	at java.io.PipedInputStream.checkStateForReceive(PipedInputStream.java:260)
+	at java.io.PipedInputStream.receive(PipedInputStream.java:201)
+	at java.io.PipedOutputStream.write(PipedOutputStream.java:122)
+	at java.util.zip.ZipOutputStream.writeInt(ZipOutputStream.java:723)
+	at java.util.zip.ZipOutputStream.writeLOC(ZipOutputStream.java:419)
+	at java.util.zip.ZipOutputStream.putNextEntry(ZipOutputStream.java:238)
+	at java.util.jar.JarOutputStream.putNextEntry(JarOutputStream.java:109)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection.transform(WebjarsURLConnection.java:188)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection.access$000(WebjarsURLConnection.java:54)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection$2.call(WebjarsURLConnection.java:90)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection$2.call(WebjarsURLConnection.java:87)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+21:49:29,020 ERROR [WebjarsURLConnection] Error Transforming zip
+java.io.IOException: Pipe closed
+	at java.io.PipedInputStream.checkStateForReceive(PipedInputStream.java:260)
+	at java.io.PipedInputStream.receive(PipedInputStream.java:226)
+	at java.io.PipedOutputStream.write(PipedOutputStream.java:149)
+	at java.util.zip.DeflaterOutputStream.deflate(DeflaterOutputStream.java:253)
+	at java.util.zip.ZipOutputStream.closeEntry(ZipOutputStream.java:255)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection.transform(WebjarsURLConnection.java:190)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection.access$000(WebjarsURLConnection.java:54)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection$2.call(WebjarsURLConnection.java:90)
+	at org.pentaho.osgi.platform.webjars.WebjarsURLConnection$2.call(WebjarsURLConnection.java:87)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Processing stopped because of an error: 
+Unable to load the job from XML file [/opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb]
+
+Unable to read file [file:///opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb]
+Could not read from "file:///opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb" because it is not a file.
+
+
+ERROR: Kitchen can't continue because the job couldn't be loaded.
+/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/bin/java -Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djava.library.path=./../libswt/osx64/ -DKETTLE_HOME= -DKETTLE_REPOSITORY= -DKETTLE_USER= -DKETTLE_PASSWORD= -DKETTLE_PLUGIN_PACKAGES= -DKETTLE_LOG_SIZE_LIMIT= -DKETTLE_JNDI_ROOT= -jar /opt/di/launcher/pentaho-application-launcher-6.0.1.0-386.jar -lib ./../libswt/osx64/ -main org.pentaho.di.kitchen.Kitchen -file=/opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb
+21:57:05,661 INFO  [KarafInstance] 
+*******************************************************************************
+*** Karaf Instance Number: 1 at /opt/di/./system/karaf//data1               ***
+*** Karaf Port:8801                                                         ***
+*** OSGI Service Port:9050                                                  ***
+*******************************************************************************
+2016/01/25 21:57:06 - Kitchen - Start of run.
+/media/sf_di/system/karaf/deploy does not exist, please create it.
+Cannot create folder /media/sf_di/system/karaf/data1/generated-bundles. Is the folder write-protected?
+/opt/data-integration/system/karaf/deploy does not exist, please create it.
+Root path does not exist: /opt/data-integration/system/karaf/deploy
+/data/env/dev/system/karaf/deploy does not exist, please create it.
+Cannot create folder /data/env/dev/system/karaf/data1/generated-bundles. Is the folder write-protected?
+/data/env/di/system/karaf/deploy does not exist, please create it.
+Cannot create folder /data/env/di/system/karaf/data1/generated-bundles. Is the folder write-protected?
+2016/01/25 21:57:06 - cfgbuilder - Warning: The configuration parameter [org] is not supported by the default configuration builder for scheme: sftp
+Processing stopped because of an error: 
+Unable to load the job from XML file [/opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb]
+
+Unable to read file [file:///opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb]
+Could not read from "file:///opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb" because it is not a file.
+
+
+ERROR: Kitchen can't continue because the job couldn't be loaded.
+/Library/Java/JavaVirtualMachines/jdk1.8.0_65.jdk/Contents/Home/bin/java -Xms1024m -Xmx2048m -XX:MaxPermSize=256m -Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2 -Djava.library.path=./../libswt/osx64/ -DKETTLE_HOME= -DKETTLE_REPOSITORY= -DKETTLE_USER= -DKETTLE_PASSWORD= -DKETTLE_PLUGIN_PACKAGES= -DKETTLE_LOG_SIZE_LIMIT= -DKETTLE_JNDI_ROOT= -jar /opt/di/launcher/pentaho-application-launcher-6.0.1.0-386.jar -lib ./../libswt/osx64/ -main org.pentaho.di.kitchen.Kitchen -file=/opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_archiving_only.kjb
