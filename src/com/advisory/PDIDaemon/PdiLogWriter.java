@@ -45,7 +45,7 @@ public class PdiLogWriter {
             }
         }
         try {
-            FileWriter logWriter = new FileWriter(logFile);
+            FileWriter logWriter = new FileWriter(logFile, true);
             this.setFileWriter(logWriter);
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,6 +64,7 @@ public class PdiLogWriter {
                 Date date = new Date();
                 Timestamp timestamp = new Timestamp(date.getTime());
                 logWriter.write(timestamp + " " + log);
+                logWriter.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();
