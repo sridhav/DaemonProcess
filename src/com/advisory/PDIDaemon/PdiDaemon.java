@@ -457,6 +457,4 @@ public class PdiDaemon {
             logFile.renameTo(compressedLogFile);
         }
     }
-
-
 }

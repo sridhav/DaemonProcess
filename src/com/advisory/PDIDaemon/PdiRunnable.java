@@ -13,14 +13,17 @@ public class PdiRunnable {
      * Log Message for pid already exists
      */
     public static final String MESSAGE_PID_EXISTS = "Process with PID #%d already exists\n";
+
     /**
      * log message got starting a process
      */
     public static final String MESSAGE_PROCESS_STARTED = "Started running a process with PID #%d\n";
+
     /**
      * command that needs to run in regular intervals
      */
     private String commandToRun = null;
+
     /**
      * pid of the process
      */
