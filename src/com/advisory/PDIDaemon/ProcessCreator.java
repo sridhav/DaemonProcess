@@ -1,12 +1,14 @@
+/**
+ * Copyright (c) 2015 The Advisory Board Company. All rights reserved.
+ * This file is part of the Crimson Care Management platform.
+ */
+
 package com.advisory.PDIDaemon;
 
 import java.io.IOException;
 import java.io.File;
 import java.lang.reflect.Field;
 
-/**
- * Created by vemulas on 1/25/16.
- */
 public class ProcessCreator {
 
     /**
@@ -34,7 +36,7 @@ public class ProcessCreator {
         String command = this.getCommand();
         ProcessBuilder pb = new ProcessBuilder();
         try {
-            pb.command(command);
+            pb.command("/bin/sh", "-c", command);
             pb.redirectOutput(new File(this.getLogFile()));
             pb.directory(new File("/opt/di"));
             Process process = pb.start();
