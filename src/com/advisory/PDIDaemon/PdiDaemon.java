@@ -46,17 +46,17 @@ public class PdiDaemon {
     /**
      * default command to be spawned each time
      */
-    public static final String COMMAND_DEFAULT = "/opt/di/kitchen.sh -file=/opt/pdi/mirth_archiving_only.kjb";
+    public static final String COMMAND_DEFAULT = "/opt/di/kitchen.sh -file=/opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_general_archiving.kjb";
 
     /**
      * default size factor k - KB, m-MB, g-GB
      */
-    public static final String SIZE_FACTOR_DEFAULT = "k";
+    public static final String SIZE_FACTOR_DEFAULT = "m";
 
     /**
      * default time factor s-seconds, m-minutes, h-hours, d-days
      */
-    public static final String TIME_FACTOR_DEFAULT = "s";
+    public static final String TIME_FACTOR_DEFAULT = "m";
 
     /**
      * default log size limit which is multiplied by the size factor

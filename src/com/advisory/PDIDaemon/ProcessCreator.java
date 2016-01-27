@@ -52,7 +52,12 @@ public class ProcessCreator {
         ProcessBuilder pb = new ProcessBuilder();
         try {
             pb.command("/bin/sh", "-c", command);
-            pb.redirectOutput(new File(this.getLogFile()));
+            File logFile = new File(this.getLogFile());
+            if (!logFile.exists()) {
+                logFile.createNewFile();
+            }
+            pb.redirectOutput(logFile);
+            pb.redirectError(logFile);
             pb.directory(new File("/opt/di"));
             Process process = pb.start();
             this.setProcess(process);
