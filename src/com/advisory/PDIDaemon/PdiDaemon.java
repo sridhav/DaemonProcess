@@ -46,17 +46,17 @@ public class PdiDaemon {
     /**
      * default command to be spawned each time
      */
-    public static final String COMMAND_DEFAULT = "/opt/di/kitchen.sh -file=/opt/pdi/mirth_archiving_only.kjb";
+    public static final String COMMAND_DEFAULT = "/opt/di/kitchen.sh -file=/opt/pdi/MirthWarehouse/etl/mirth_archiving/mirth_general_archiving.kjb";
 
     /**
      * default size factor k - KB, m-MB, g-GB
      */
-    public static final String SIZE_FACTOR_DEFAULT = "k";
+    public static final String SIZE_FACTOR_DEFAULT = "m";
 
     /**
      * default time factor s-seconds, m-minutes, h-hours, d-days
      */
-    public static final String TIME_FACTOR_DEFAULT = "s";
+    public static final String TIME_FACTOR_DEFAULT = "m";
 
     /**
      * default log size limit which is multiplied by the size factor
@@ -129,9 +129,9 @@ public class PdiDaemon {
     private String sizeUnit;
 
     /**
-     * cpu limit value
+     * logWriter for autospawn
      */
-    private int cpuLimit = -1;
+    private PdiLogWriter logWriter;
 
     /**
      * Constructor for the daemon process
@@ -141,7 +141,6 @@ public class PdiDaemon {
     public PdiDaemon(String[] args) {
         initDefaults();
         checkArguments(args);
-        setOutputStream();
     }
 
     /**
@@ -154,51 +153,33 @@ public class PdiDaemon {
      */
     public static void main(String args[]) {
         PdiDaemon pdi = new PdiDaemon(args);
-
+        PdiLogWriter logWriter = new PdiLogWriter(pdi.getLogFolder() + File.separator + DAEMON_LOG_NAME);
+        pdi.setLogWriter(logWriter);
         int spawnTime = pdi.getSpawnTime();
         int waitTime = pdi.getWaitTime();
         String command = pdi.getCommand();
-        int cpuLimit = pdi.getCpuLimit();
         String fileName = pdi.getLogFolder() + File.separator + COMMAND_LOG_NAME;
         PdiRunnable run = null;
-        if (cpuLimit > 0) {
-            run = new PdiRunnable(command, fileName, cpuLimit);
-        } else {
-            run = new PdiRunnable(command, fileName);
-        }
+        run = new PdiRunnable(command, fileName);
+        run.setLogWriter(logWriter);
         try {
+
             do {
-                pdi.logRotate();
+                pdi.logRotate(pdi.getLogFolder() + File.separator + DAEMON_LOG_NAME);
+                pdi.logRotate(pdi.getLogFolder() + File.separator + COMMAND_LOG_NAME);
                 if (!run.isProcessExists()) {
                     run.run();
-                    System.out.printf(MESSAGE_SPAWN_WAIT, spawnTime, pdi.getTimeUnit());
+                    String log = String.format(MESSAGE_SPAWN_WAIT, spawnTime, pdi.getTimeUnit());
+                    logWriter.writeLog(log);
                     Thread.sleep(spawnTime * pdi.getTimeFactor());
                 } else {
-                    System.out.printf(MESSAGE_WAIT_FOR_PROCESS, waitTime, pdi.getTimeUnit());
+                    String log = String.format(MESSAGE_WAIT_FOR_PROCESS, waitTime, pdi.getTimeUnit());
+                    logWriter.writeLog(log);
                     Thread.sleep(waitTime * pdi.getTimeFactor());
                 }
             } while (true);
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * sets output stream to the log file
-     */
-    public void setOutputStream() {
-        File logFile = new File(this.getLogFolder() + File.separator + DAEMON_LOG_NAME);
-        if (!logFile.exists()) {
-            File temp = new File(this.getLogFolder());
-            temp.mkdirs();
-        }
-        PrintStream ps = null;
-        try {
-            ps = new PrintStream(new BufferedOutputStream(new FileOutputStream(logFile, true)), true);
-            System.setOut(ps);
-            System.setErr(ps);
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -214,7 +195,6 @@ public class PdiDaemon {
         this.setLogFolder(LOG_OUTPUT_FOLDER);
         this.setCommand(COMMAND_DEFAULT);
         this.setLogLimit(LOG_LIMIT_DEFAULT);
-
     }
 
     /**
@@ -275,10 +255,6 @@ public class PdiDaemon {
                     this.printHelp();
                     System.exit(1);
                     break;
-                case 'p':
-                    int cpuLimit = Integer.parseInt(args[index + 1]);
-                    this.setCpuLimit(cpuLimit);
-                    return index+1;
                 default:
                     System.out.println("Invalid option " + args[index]);
                     this.printHelp();
@@ -303,23 +279,8 @@ public class PdiDaemon {
                         "-t => set time factor (s-seconds, m-minutes, h-hours, d-days)\n" +
                         "-k => set size factor (k-KB, m-MB, g-GB)\n" +
                         "-m => set log rotate size limit \n" +
-                        "-p => set cpu limit value for process \n" +
                         "-h => print help"
         );
-    }
-
-    /**
-     * @return cpu limit value
-     */
-    private int getCpuLimit() {
-        return this.cpuLimit;
-    }
-
-    /**
-     * @param limit cpu limit value
-     */
-    private void setCpuLimit(int limit) {
-        this.cpuLimit = limit;
     }
 
     /**
@@ -487,10 +448,24 @@ public class PdiDaemon {
     }
 
     /**
+     * @param logWriter log writer for autospawn
+     */
+    protected void setLogWriter(PdiLogWriter logWriter) {
+        this.logWriter = logWriter;
+    }
+
+    /**
+     * @return log writer for autospawn
+     */
+    protected PdiLogWriter getLogWriter() {
+        return this.logWriter;
+    }
+
+    /**
      * Rotates the log to a new file when log reaches a max size
      */
-    protected void logRotate() {
-        File logFile = new File(this.getLogFolder() + File.separator + DAEMON_LOG_NAME);
+    protected void logRotate(String fileName) {
+        File logFile = new File(fileName);
         int logFileMaxLimit = this.getLogLimit() * this.getSizeFactor();
         if (logFile.length() > logFileMaxLimit) {
             DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -498,9 +473,9 @@ public class PdiDaemon {
             String today = dateFormat.format(date);
             String compressedLogFileName = logFile.getPath() + today;
             File compressedLogFile = new File(compressedLogFileName);
-            System.out.printf(MESSAGE_COMPRESS, logFile.getName(), compressedLogFileName, logFile.getParent());
+            String log = String.format(MESSAGE_COMPRESS, logFile.getName(), compressedLogFileName, logFile.getParent());
+            this.getLogWriter().writeLog(log);
             logFile.renameTo(compressedLogFile);
-            setOutputStream();
         }
     }
 }

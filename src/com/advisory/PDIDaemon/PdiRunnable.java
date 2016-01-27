@@ -13,32 +13,32 @@ public class PdiRunnable {
      * Log Message for pid already exists
      */
     public static final String MESSAGE_PID_EXISTS = "Process with PID #%d already exists\n";
+
     /**
      * log message got starting a process
      */
     public static final String MESSAGE_PROCESS_STARTED = "Started running a process with PID #%d\n";
-    /**
-     * cpulimit command
-     */
-    public static final String CPULIMIT_COMMAND = "cpulimit -z -i -l %d -p %d &";
+
     /**
      * command that needs to run in regular intervals
      */
     private String commandToRun = null;
+
     /**
      * pid of the process
      */
     private int pid = -1;
 
-    /**
-     * limit cpu value
-     */
-    private int limit = -1;
 
     /**
-     *
+     * log file to store command output
      */
     private String logFile;
+
+    /**
+     * logwriter for autospawn logs
+     */
+    private PdiLogWriter logWriter = null;
 
     /**
      * constructor for the runnable process
@@ -50,39 +50,17 @@ public class PdiRunnable {
         this.setLogFile(logFile);
     }
 
-    public PdiRunnable(String command, String logFile, int limit) {
-        this.setCommand(command);
-        this.setLimit(limit);
-        this.setLogFile(logFile);
-    }
-
     /**
      * runs the command and stores the pid for the process that is executed
      */
     public void run() {
-
-            String command = this.getCommand();
-            String logFile = this.getLogFile();
-            ProcessCreator pc = new ProcessCreator(command, logFile);
-            int pid = pc.execute();
-            this.setPid(pid);
-            int limit = this.getLimit();
-            if (limit > 0) {
-                String cpuLimitCommand = String.format(CPULIMIT_COMMAND, limit, pid);
-                pc = new ProcessCreator(cpuLimitCommand);
-                pc.execute();
-            }
-           /** InputStream is = process.getInputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            FileWriter fw = new FileWriter(this.getLogFile(), true);
-            String temp = null;
-            while((temp = br.readLine()) != null) {
-                fw.write(temp+"\n");
-            }
-            fw.close();
-*/
-            System.out.printf(MESSAGE_PROCESS_STARTED, pid);
-
+        String command = this.getCommand();
+        String logFile = this.getLogFile();
+        ProcessCreator pc = new ProcessCreator(command, logFile);
+        int pid = pc.execute();
+        this.setPid(pid);
+        String log = String.format(MESSAGE_PROCESS_STARTED, pid);
+        this.getLogWriter().writeLog(log);
     }
 
     /**
@@ -95,15 +73,15 @@ public class PdiRunnable {
         try {
             if(pid >0) {
                 String cmd = "ps -ef | awk '{printf \"%s\\n\",$2;}' | grep " + pid;
-                String command[] = this.getCmdArgs(cmd);
-                Process process = Runtime.getRuntime().exec(command);
+                Process process = Runtime.getRuntime().exec(cmd);
                 InputStream is = process.getInputStream();
                 BufferedReader bf = new BufferedReader(new InputStreamReader(is));
                 String temp = null;
                 while ((temp = bf.readLine()) != null) {
                     int returnedPid = Integer.parseInt(temp);
                     if (returnedPid == pid && pid > 0) {
-                        System.out.printf(MESSAGE_PID_EXISTS, pid);
+                        String log = String.format(MESSAGE_PID_EXISTS, pid);
+                        this.getLogWriter().writeLog(log);
                         return true;
                     }
                 }
@@ -131,27 +109,6 @@ public class PdiRunnable {
     }
 
     /**
-     * returns the pid from the process
-     *
-     * @param process where the pid needs to be extracted
-     * @return pid of the process
-     */
-    private int getPidFromProcess(Process process) {
-        try {
-            Field f = process.getClass().getDeclaredField("pid" );
-            f.setAccessible(true);
-            int pid = f.getInt(process);
-            this.setPid(pid);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        return pid;
-    }
-
-    /**
      * @return pid
      */
     private int getPid() {
@@ -166,31 +123,31 @@ public class PdiRunnable {
     }
 
     /**
-     * @return cpu limit value
+     * @param logFile log file to store command output
      */
-    private int getLimit() {
-        return this.limit;
-    }
-
-    /**
-     * @param limit cpu limit value
-     */
-    private void setLimit(int limit) {
-        this.limit = limit;
-    }
-
     private void setLogFile(String logFile) {
         this.logFile = logFile;
     }
 
+    /**
+     * @return log file to store command output
+     */
     private String getLogFile() {
         return logFile;
     }
 
-    private String[] getCmdArgs(String command) {
-        String[] cmdArgs = {"/bin/sh", "-c", command};
+    /**
+     * @param logWriter sets PdilogWriter
+     */
+    protected void setLogWriter(PdiLogWriter logWriter) {
+        this.logWriter = logWriter;
+    }
 
-        return cmdArgs;
+    /**
+     * @return logwriter for autospawn data
+     */
+    protected PdiLogWriter getLogWriter() {
+        return this.logWriter;
     }
 }
 
